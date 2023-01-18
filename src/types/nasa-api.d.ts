@@ -1,5 +1,5 @@
 export interface NASA_API_Response {
-  copyright: string;
+  copyright?: string;
   date: string;
   explanation: string;
   hdurl: string;
@@ -9,4 +9,14 @@ export interface NASA_API_Response {
   url: string;
   // for videos
   thumbnail_url?: string;
+}
+
+export interface APOD_Request_Data {
+  startDate: string;
+  endDate: string;
+}
+
+export interface Success_Based_Response<T> {
+  success: boolean;
+  data?: T;
 }

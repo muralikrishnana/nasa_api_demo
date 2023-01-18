@@ -1,0 +1,1 @@
+export const NASA_API_COMPLIANT_DATE_FORMAT = 'YYYY[-]MM[-]DD';
