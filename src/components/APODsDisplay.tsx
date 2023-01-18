@@ -1,4 +1,4 @@
-import { ScrollArea } from '@mantine/core';
+import { Loader, ScrollArea } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { NASA_API_Response } from '../types/nasa-api';
 import cssClasses from './APODsDisplay.module.scss';
@@ -10,9 +10,9 @@ interface APODsDisplayProps {
   data: NASA_API_Response[];
 }
 
-const ITEMS_IN_ONE_ROW = 5;
+const ITEMS_IN_ONE_ROW = 7;
 
-export function APODsDisplay({ data }: APODsDisplayProps) {
+export function APODsDisplay({ isLoading, data }: APODsDisplayProps) {
   const [apodGroups, setApodGroups] = useState<NASA_API_Response[][]>([[]]);
 
   useEffect(() => {
@@ -41,6 +41,8 @@ export function APODsDisplay({ data }: APODsDisplayProps) {
           </ScrollArea>
         );
       })}
+
+      <div className={cssClasses.loader}>{isLoading && <Loader variant='dots' color={'dark'} />}</div>
     </div>
   );
 }

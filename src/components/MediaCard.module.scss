@@ -1,4 +1,14 @@
+.infoContainer {
+    display: flex;
+    padding: 0;
+    margin: 0.2rem;
+    width: 100%;
+    flex-direction: column;
+}
+
 .titleRow {
     display: flex;
+    width: 100%;
+    flex: 1;
     justify-content: space-between;
 }

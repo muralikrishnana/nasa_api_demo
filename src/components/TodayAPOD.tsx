@@ -1,4 +1,4 @@
-import { createStyles, Image, Skeleton, Text, Title } from '@mantine/core';
+import { createStyles, Skeleton, Text, Title } from '@mantine/core';
 import ReactPlayer from 'react-player';
 import { NASA_API_Response } from '../types/nasa-api';
 
@@ -6,8 +6,7 @@ const useStyles = createStyles((theme) => ({
   wrapper: {
     display: 'flex',
     alignItems: 'flex-start',
-    padding: theme.spacing.xl,
-    margin: '1.5rem',
+    padding: theme.spacing.md,
     borderRadius: theme.radius.md,
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
     border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[3]}`,
@@ -57,27 +56,6 @@ const useStyles = createStyles((theme) => ({
     lineHeight: 1,
     marginBottom: theme.spacing.md,
   },
-
-  controls: {
-    display: 'flex',
-    marginTop: theme.spacing.xl,
-  },
-
-  inputWrapper: {
-    width: '100%',
-    flex: '1',
-  },
-
-  input: {
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-    borderRight: 0,
-  },
-
-  control: {
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-  },
 }));
 
 interface TodayAPODProps {
@@ -104,7 +82,7 @@ export function TodayAPOD({ isLoading, ...props }: TodayAPODProps) {
           )) || <Skeleton mb={5} height={15} radius='md' width={'20%'} />}
 
           {(!isLoading && (
-            <Text size='sm' mb='md' color={'dark'}>
+            <Text size='sm' mb='md' color={'dark'} lineClamp={12}>
               {props.data?.explanation}
             </Text>
           )) || (
@@ -129,9 +107,26 @@ export function TodayAPOD({ isLoading, ...props }: TodayAPODProps) {
       {(!isLoading && (
         <>
           {(props.data?.media_type === 'image' && (
-            <Image src={props.data?.url} radius='md' className={classes.image} alt={props.data?.title} />
+            <div
+              style={{
+                width: '25rem',
+                height: '25rem',
+                maxHeight: '70vw',
+                maxWidth: '70vw',
+                background: `url('${props.data?.url}')`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+                borderRadius: '1rem',
+              }}></div>
           )) || (
-            <ReactPlayer light={props.data?.thumbnail_url} controls url={props.data?.url} className={classes.image} />
+            <ReactPlayer
+              style={{ width: '25rem', height: '25rem', maxHeight: '75vw', maxWidth: '75vw' }}
+              light={props.data?.thumbnail_url}
+              controls
+              url={props.data?.url}
+              className={classes.image}
+            />
           )}
         </>
       )) || (

@@ -8,6 +8,8 @@ import { TodayAPOD } from '../components/TodayAPOD';
 import { NASA_API_COMPLIANT_DATE_FORMAT } from '../misc/constants';
 import { APOD_Request_Data, NASA_API_Response, Success_Based_Response } from '../types/nasa-api';
 
+const APODs_TO_LOAD_IN_CALL = 11;
+
 async function fetchAPODs(props: APOD_Request_Data): Promise<Success_Based_Response<NASA_API_Response[]>> {
   // fetches APODs from backend
   const response = await fetch(`/api/apod?startDate=${props.startDate}&endDate=${props.endDate}`);
@@ -22,7 +24,7 @@ export default function Home() {
   const oldestAPODRef = useRef<NASA_API_Response | null>();
   const apodLoadingRef = useRef<boolean>();
 
-  const [scroll, scrollTo] = useWindowScroll();
+  const [scroll] = useWindowScroll();
 
   useEffect(() => {
     if (apods.length < 1) oldestAPODRef.current = null;
@@ -41,7 +43,9 @@ export default function Home() {
     const lastLoadedDateMinus1Day = moment(oldestAPODRef.current.date)
       .subtract(1, 'day')
       .format(NASA_API_COMPLIANT_DATE_FORMAT);
-    const startDate = moment(lastLoadedDateMinus1Day).subtract(11, 'days').format(NASA_API_COMPLIANT_DATE_FORMAT);
+    const startDate = moment(lastLoadedDateMinus1Day)
+      .subtract(APODs_TO_LOAD_IN_CALL, 'days')
+      .format(NASA_API_COMPLIANT_DATE_FORMAT);
 
     setApodLoading(true);
 
@@ -62,7 +66,7 @@ export default function Home() {
   useEffect(() => {
     // infinite loading
     const totalHeightOfPage = document.body.scrollHeight;
-    const shouldLoadMore = totalHeightOfPage - scroll.y - window.innerHeight < 0;
+    const shouldLoadMore = totalHeightOfPage - scroll.y - window.innerHeight < 25;
 
     if (!shouldLoadMore) return;
 
@@ -81,7 +85,9 @@ export default function Home() {
     (async () => {
       const today = moment().format(NASA_API_COMPLIANT_DATE_FORMAT);
       const yesterday = moment().subtract(1, 'days').format(NASA_API_COMPLIANT_DATE_FORMAT);
-      const elevenDaysBeforeToday = moment().subtract(11, 'days').format(NASA_API_COMPLIANT_DATE_FORMAT);
+      const elevenDaysBeforeToday = moment()
+        .subtract(APODs_TO_LOAD_IN_CALL, 'days')
+        .format(NASA_API_COMPLIANT_DATE_FORMAT);
 
       setApodLoading(true);
 
@@ -130,7 +136,9 @@ export default function Home() {
       <main>
         <AppHeader />
         <div>
-          <TodayAPOD isLoading={apods.length < 1} data={apods.length > 0 ? apods[0] : null} />
+          <div style={{ margin: '1.5rem' }}>
+            <TodayAPOD isLoading={apods.length < 1} data={apods.length > 0 ? apods[0] : null} />
+          </div>
           <APODsDisplay isLoading={apodLoading} data={apods.length > 1 ? apods.slice(1, apods.length) : []} />
         </div>
       </main>
