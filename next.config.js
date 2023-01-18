@@ -10,6 +10,20 @@ const nextConfig = {
 
     return config
   },
+
+  async headers() {
+    return [
+      {
+        source: '/apod',
+        headers: [
+          {
+            key: 'Set-Cookie',
+            value: 'cross-site-cookie=whatever; SameSite=None; Secure',
+          },
+        ],
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig
