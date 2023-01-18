@@ -1,4 +1,5 @@
-import { Container, createStyles, Text } from '@mantine/core';
+import { ActionIcon, Card, Container, createStyles, Text, useMantineColorScheme } from '@mantine/core';
+import { IconMoonStars, IconSun } from '@tabler/icons';
 import Image from 'next/image';
 import cssClasses from './AppHeader.module.scss';
 
@@ -17,8 +18,30 @@ const useStyles = createStyles((theme) => ({
 export function AppHeader() {
   const { classes } = useStyles();
 
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const dark = colorScheme === 'dark';
+
   return (
     <div>
+      <Card
+        p={0}
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          position: 'fixed',
+          bottom: '0.5rem',
+          right: '0.5rem',
+          zIndex: 10,
+        }}>
+        <ActionIcon
+          variant='outline'
+          color={dark ? 'yellow' : 'blue'}
+          onClick={() => toggleColorScheme()}
+          title='Toggle color scheme'
+          size={'lg'}>
+          {dark ? <IconSun size={18} /> : <IconMoonStars size={18} />}
+        </ActionIcon>
+      </Card>
       <Container className={classes.inner} fluid p={0}>
         <div className={cssClasses.logoContainer}>
           <Image src={'/assets/nasa-logo.svg'} width={60} height={60} alt={'nasa_logo'} />

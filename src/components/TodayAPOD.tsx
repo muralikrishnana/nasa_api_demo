@@ -133,7 +133,7 @@ export function TodayAPOD({ isLoading, ...props }: TodayAPODProps) {
             )) || <Skeleton mb={5} height={15} radius='md' width={'20%'} />}
 
             {(!isLoading && (
-              <Text size='sm' mb='md' color={'dark'} lineClamp={12}>
+              <Text size='sm' mb='md' lineClamp={12}>
                 {props.data?.explanation}
               </Text>
             )) || (
