@@ -56,8 +56,6 @@ export default function Home() {
         apods = apods.concat(prevDaysApodResponse.data);
       }
 
-      console.log(apods);
-
       setApods(apods);
     })();
   }, []);

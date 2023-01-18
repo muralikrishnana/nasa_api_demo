@@ -1,5 +1,5 @@
 import { createStyles, Image, Skeleton, Text, Title } from '@mantine/core';
-import ReactPlayer from 'react-player/youtube';
+import ReactPlayer from 'react-player';
 import { NASA_API_Response } from '../types/nasa-api';
 
 const useStyles = createStyles((theme) => ({
@@ -128,7 +128,9 @@ export function TodayAPOD({ isLoading, ...props }: TodayAPODProps) {
         <>
           {(props.data?.media_type === 'image' && (
             <Image src={props.data?.url} radius='md' className={classes.image} alt={props.data?.title} />
-          )) || <ReactPlayer controls url={props.data?.url} className={classes.image} />}
+          )) || (
+            <ReactPlayer light={props.data?.thumbnail_url} controls url={props.data?.url} className={classes.image} />
+          )}
         </>
       )) || (
         <div className={classes.image}>
