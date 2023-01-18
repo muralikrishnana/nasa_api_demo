@@ -76,7 +76,11 @@ export default function Home() {
       if (moreAPODs.length < 1) return;
 
       setApods((apods) => {
-        return [...apods, ...moreAPODs.reverse()];
+        const sortedAPODs = moreAPODs.sort((a, b) => {
+          return a.date > b.date ? -1 : 1;
+        });
+
+        return [...apods, ...sortedAPODs];
       });
     })();
   }, [loadMoreAPODs, scroll]);
@@ -117,7 +121,8 @@ export default function Home() {
         Array.isArray(prevDaysApodResponse.data) &&
         prevDaysApodResponse.data.length > 0
       ) {
-        apods = apods.concat(prevDaysApodResponse.data.reverse());
+        prevDaysApodResponse.data.reverse();
+        apods = apods.concat(prevDaysApodResponse.data);
       }
 
       setApods(apods);

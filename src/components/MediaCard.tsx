@@ -39,6 +39,7 @@ export function MediaCard({ data }: MediaCardProps) {
   return (
     <>
       <Modal
+        withCloseButton={false}
         opened={moreInfoModalOpen}
         overflow='inside'
         centered

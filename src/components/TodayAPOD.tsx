@@ -1,4 +1,6 @@
-import { createStyles, Skeleton, Text, Title } from '@mantine/core';
+import { createStyles, Modal, Skeleton, Text, Title } from '@mantine/core';
+import Image from 'next/image';
+import { useState } from 'react';
 import ReactPlayer from 'react-player';
 import { NASA_API_Response } from '../types/nasa-api';
 
@@ -17,6 +19,18 @@ const useStyles = createStyles((theme) => ({
       justifyContent: 'flex-start',
       minHeight: 200,
     },
+  },
+
+  mediaContainer: {
+    cursor: 'pointer',
+  },
+
+  mediaContainerInModal: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
   },
 
   image: {
@@ -65,75 +79,113 @@ interface TodayAPODProps {
 }
 
 export function TodayAPOD({ isLoading, ...props }: TodayAPODProps) {
+  const [mediaModalOpen, setMediaModalOpen] = useState<boolean>(false);
+
   const { classes } = useStyles();
 
   return (
-    <div className={classes.wrapper}>
-      <div className={classes.body}>
-        <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-          {(!isLoading && <Title className={classes.title}>{props.data?.title}</Title>) || (
-            <Skeleton className={classes.title} height={25} radius='md' width={'80%'} />
-          )}
-
-          {(!isLoading && (
-            <Text weight={500} size='lg' mb={5}>
-              {props.data?.date}
-            </Text>
-          )) || <Skeleton mb={5} height={15} radius='md' width={'20%'} />}
-
-          {(!isLoading && (
-            <Text size='sm' mb='md' color={'dark'} lineClamp={12}>
-              {props.data?.explanation}
-            </Text>
-          )) || (
-            <>
-              <Skeleton mb='md' height={100} radius='md' />
-            </>
-          )}
-
-          {(!isLoading &&
-            ((props.data?.copyright && (
-              <Text size='sm' color='dimmed'>
-                &copy; {props.data?.copyright}
-              </Text>
-            )) || <></>)) || (
-            <>
-              <Skeleton height={15} radius='md' width={'20%'} />
-            </>
-          )}
-        </div>
-      </div>
-
-      {(!isLoading && (
-        <>
-          {(props.data?.media_type === 'image' && (
-            <div
-              style={{
-                width: '25rem',
-                height: '25rem',
-                maxHeight: '70vw',
-                maxWidth: '70vw',
-                background: `url('${props.data?.url}')`,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-                borderRadius: '1rem',
-              }}></div>
-          )) || (
-            <ReactPlayer
-              style={{ width: '25rem', height: '25rem', maxHeight: '75vw', maxWidth: '75vw' }}
-              light={props.data?.thumbnail_url}
-              controls
-              url={props.data?.url}
-              className={classes.image}
-            />
-          )}
-        </>
-      )) || (
-        <div className={classes.image}>
-          <Skeleton height={200} radius='md' />
-        </div>
+    <>
+      {props.data !== null && (
+        <Modal
+          centered
+          withCloseButton={false}
+          opened={mediaModalOpen}
+          styles={() => {
+            return {
+              body: {
+                height: '60vh',
+              },
+            };
+          }}
+          onClose={() => setMediaModalOpen(false)}>
+          <div className={classes.mediaContainerInModal}>
+            {(props.data.media_type === 'image' && (
+              <Image
+                src={props.data.url}
+                loader={() => props.data?.url ?? ''}
+                fill
+                style={{ objectFit: 'contain' }}
+                alt={props.data?.title}
+              />
+            )) || (
+              <ReactPlayer
+                style={{ width: '25rem', height: '25rem', maxHeight: '72vw', maxWidth: '72vw' }}
+                light={props.data?.thumbnail_url}
+                controls
+                url={props.data?.url}
+                className={classes.image}
+              />
+            )}
+          </div>
+        </Modal>
       )}
-    </div>
+      <div className={classes.wrapper}>
+        <div className={classes.body}>
+          <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+            {(!isLoading && <Title className={classes.title}>{props.data?.title}</Title>) || (
+              <Skeleton className={classes.title} height={25} radius='md' width={'80%'} />
+            )}
+
+            {(!isLoading && (
+              <Text weight={500} size='lg' mb={5}>
+                {props.data?.date}
+              </Text>
+            )) || <Skeleton mb={5} height={15} radius='md' width={'20%'} />}
+
+            {(!isLoading && (
+              <Text size='sm' mb='md' color={'dark'} lineClamp={12}>
+                {props.data?.explanation}
+              </Text>
+            )) || (
+              <>
+                <Skeleton mb='md' height={100} radius='md' />
+              </>
+            )}
+
+            {(!isLoading &&
+              ((props.data?.copyright && (
+                <Text size='sm' color='dimmed'>
+                  &copy; {props.data?.copyright}
+                </Text>
+              )) || <></>)) || (
+              <>
+                <Skeleton height={15} radius='md' width={'20%'} />
+              </>
+            )}
+          </div>
+        </div>
+
+        {(!isLoading && (
+          <div className={classes.mediaContainer} onClick={() => setMediaModalOpen(true)}>
+            {(props.data?.media_type === 'image' && (
+              <div
+                style={{
+                  width: '25rem',
+                  height: '25rem',
+                  maxHeight: '70vw',
+                  maxWidth: '70vw',
+                  background: `url('${props.data?.url}')`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                  borderRadius: '1rem',
+                }}></div>
+            )) || (
+              <ReactPlayer
+                style={{ width: '25rem', height: '25rem', maxHeight: '75vw', maxWidth: '75vw' }}
+                light={props.data?.thumbnail_url}
+                controls
+                url={props.data?.url}
+                className={classes.image}
+              />
+            )}
+          </div>
+        )) || (
+          <div className={classes.image}>
+            <Skeleton height={200} radius='md' />
+          </div>
+        )}
+      </div>
+    </>
   );
 }
