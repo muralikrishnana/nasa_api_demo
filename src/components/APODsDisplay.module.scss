@@ -1,0 +1,17 @@
+.container {
+    margin: 1.5rem;
+    margin-top: 2rem;
+}
+
+.row {
+    display: flex;
+    padding-bottom: 1rem;
+
+    > div {
+        margin: 0.5rem;
+
+        &:first-child {
+            margin-left: 0;
+        }
+    }
+}

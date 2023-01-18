@@ -3,8 +3,8 @@ import moment from 'moment';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { TodayAPOD } from '../components/TodayAPOD';
-import cssClasses from './index.module.scss';
 
+import { APODsDisplay } from '../components/APODsDisplay';
 import { NASA_API_COMPLIANT_DATE_FORMAT } from '../misc/constants';
 import { APOD_Request_Data, NASA_API_Response, Success_Based_Response } from '../types/nasa-api';
 
@@ -53,7 +53,7 @@ export default function Home() {
         Array.isArray(prevDaysApodResponse.data) &&
         prevDaysApodResponse.data.length > 0
       ) {
-        apods = apods.concat(prevDaysApodResponse.data);
+        apods = apods.concat(prevDaysApodResponse.data.reverse());
       }
 
       setApods(apods);
@@ -71,8 +71,9 @@ export default function Home() {
       </Head>
       <main>
         <AppHeader />
-        <div className={cssClasses.body}>
+        <div>
           <TodayAPOD isLoading={apods.length < 1} data={apods.length > 0 ? apods[0] : null} />
+          <APODsDisplay isLoading={apodLoading} data={apods.length > 1 ? apods.slice(1, apods.length) : []} />
         </div>
       </main>
     </>

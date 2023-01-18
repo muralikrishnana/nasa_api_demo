@@ -7,6 +7,7 @@ const useStyles = createStyles((theme) => ({
     display: 'flex',
     alignItems: 'flex-start',
     padding: theme.spacing.xl,
+    margin: '1.5rem',
     borderRadius: theme.radius.md,
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
     border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[3]}`,
@@ -112,11 +113,12 @@ export function TodayAPOD({ isLoading, ...props }: TodayAPODProps) {
             </>
           )}
 
-          {(!isLoading && props.data?.copyright && (
-            <Text size='sm' color='dimmed'>
-              &copy; {props.data?.copyright}
-            </Text>
-          )) || (
+          {(!isLoading &&
+            ((props.data?.copyright && (
+              <Text size='sm' color='dimmed'>
+                &copy; {props.data?.copyright}
+              </Text>
+            )) || <></>)) || (
             <>
               <Skeleton height={15} radius='md' width={'20%'} />
             </>
